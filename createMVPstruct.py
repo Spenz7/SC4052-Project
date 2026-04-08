@@ -2,7 +2,7 @@ import os
 import json
 
 # --- Project root ---
-root = "-"
+root = "."
 os.makedirs(root, exist_ok=True)
 
 # --- .env ---
