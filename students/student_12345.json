@@ -1,7 +1,16 @@
 {
     "student_id": "12345",
     "struggles": {
-        "lec1_tut1": [],
+        "lec1_tut1": [
+            {
+                "type": "tut",
+                "content": "TUT1 Q2: When counting nodes, why can’t we use indexing like arrays to get the size faster?"
+            },
+            {
+                "type": "lec",
+                "content": "After learning singly linked lists, why is searching still O(n) even though insertion at the head is O(1)?"
+            }
+        ],
         "lec2_tut2": [],
         "lec3_tut3": []
     }

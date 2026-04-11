@@ -16,13 +16,18 @@
 
 <br><br>
 
-<!-- Lecture/Tutorial Selection -->
-<label>Select Lecture/Tutorial:</label>
-<select id="pair">
-    <option value="lec1_tut1">Lec1 / Tut1</option>
-    <option value="lec2_tut2">Lec2 / Tut2</option>
-    <option value="lec3_tut3">Lec3 / Tut3</option>
+<!-- Type Selection -->
+<label>Select Type:</label>
+<select id="type">
+    <option value="lec">Lecture</option>
+    <option value="tut">Tutorial</option>
 </select>
+
+<br><br>
+
+<!-- Topic Selection (dynamic) -->
+<label>Select Topic:</label>
+<select id="selection"></select>
 
 <br><br>
 
@@ -34,6 +39,7 @@
 <!-- Submit Button -->
 <button onclick="submitQuestion()">Ask</button>
 
+<br><br>
 
 <!-- Status -->
 <h4 id="status">Status: Idle</h4>
@@ -43,9 +49,32 @@
 <div id="response"></div>
 
 <script>
+const data = {
+    lec: ["lec1", "lec2", "lec3"],
+    tut: ["tut1", "tut2", "tut3"]
+};
+
+function updateSelection() {
+    const type = document.getElementById("type").value;
+    const selection = document.getElementById("selection");
+
+    selection.innerHTML = "";
+
+    data[type].forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item.toUpperCase();
+        selection.appendChild(option);
+    });
+}
+
+document.getElementById("type").addEventListener("change", updateSelection);
+window.onload = updateSelection;
+
 async function submitQuestion() {
     const student_id = document.getElementById("student_id").value;
-    const pair = document.getElementById("pair").value;
+    const type = document.getElementById("type").value;
+    const selection = document.getElementById("selection").value;
     const question = document.getElementById("question").value;
 
     document.getElementById("status").innerText =
@@ -61,7 +90,8 @@ async function submitQuestion() {
             },
             body: JSON.stringify({
                 student_id: student_id,
-                pair: pair,
+                type: type,
+                selection: selection,
                 question: question
             })
         });
