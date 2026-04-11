@@ -4,7 +4,7 @@
         "lec1_tut1": [
             {
                 "type": "tut",
-                "content": "Q2: When counting nodes, why can’t we use indexing like arrays to get the size faster?"
+                "content": "Q1: Why does traversal feel inefficient compared to array indexing even for simple printing?"
             }
         ],
         "lec2_tut2": [],
