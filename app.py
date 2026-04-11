@@ -4,8 +4,12 @@ import json, os
 app = Flask(__name__, template_folder='frontend')
 
 @app.route('/')
-def student_page():
+def home():
     return render_template('index.html')
+
+@app.route('/student')
+def student_page():
+    return render_template('student.html')
 
 @app.route('/professor')
 def professor_page():
