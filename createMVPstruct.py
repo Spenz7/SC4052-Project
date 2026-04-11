@@ -50,6 +50,13 @@ with open(os.path.join(frontend_path, "index.html"), "w") as f:
         "<body>\n<h1>Student Interface</h1>\n<!-- Input, buttons, output here -->\n</body>\n</html>"
     )
 
+# student.html
+with open(os.path.join(frontend_path, "student.html"), "w") as f:
+    f.write(
+        "<!DOCTYPE html>\n<html>\n<head>\n<title>Student Page</title>\n</head>\n"
+        "<body>\n<h1>Student Interface</h1>\n<!-- Query and results here -->\n</body>\n</html>"
+    )
+
 # professor.html
 with open(os.path.join(frontend_path, "professor.html"), "w") as f:
     f.write(
