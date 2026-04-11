@@ -39,7 +39,10 @@
 <!-- Submit Button -->
 <button onclick="submitQuestion()">Ask</button>
 
-<br><br>
+<br>
+<button onclick="viewStruggles()">View My Struggles</button>
+
+<br>
 
 <!-- Status -->
 <h4 id="status">Status: Idle</h4>
@@ -47,6 +50,9 @@
 <!-- Output -->
 <h3>Response:</h3>
 <div id="response"></div>
+
+<h3>My Struggles:</h3>
+<div id="struggles"></div>
 
 <script>
 const data = {
@@ -112,6 +118,65 @@ async function submitQuestion() {
             "Status: Error";
     }
 }
+
+async function viewStruggles() {
+    const student_id = document.getElementById("student_id").value;
+
+    document.getElementById("status").innerText =
+        "Status: Fetching struggles...";
+
+    document.getElementById("struggles").innerHTML = "";
+
+    try {
+        const res = await fetch(`/view_struggles?student_id=${student_id}`);
+        const data = await res.json();
+
+        document.getElementById("status").innerText =
+            "Status: Loaded struggles";
+
+        const container = document.getElementById("struggles");
+
+        const struggles = data.struggles;
+
+        for (const pair in struggles) {
+            const section = document.createElement("div");
+
+            // Title
+            const title = document.createElement("h4");
+            title.innerText = pair.replace("_", " + ").toUpperCase();
+            section.appendChild(title);
+
+            if (struggles[pair].length === 0) {
+                const empty = document.createElement("p");
+                empty.innerText = "No struggles recorded.";
+                section.appendChild(empty);
+            } else {
+                const ul = document.createElement("ul");
+
+                // Sort: lec first, then tut
+                const sorted = struggles[pair].slice().sort((a, b) => {
+                    if (a.type === b.type) return 0;
+                    return a.type === "lec" ? -1 : 1;
+                });
+
+                sorted.forEach(item => {
+                    const li = document.createElement("li");
+                    li.innerText = `[${item.type.toUpperCase()}] ${item.content}`;
+                    ul.appendChild(li);
+                });
+
+                section.appendChild(ul);
+            }
+
+            container.appendChild(section);
+        }
+
+    } catch (err) {
+        document.getElementById("status").innerText =
+            "Status: Error fetching struggles";
+    }
+}
+
 </script>
 
 </body>

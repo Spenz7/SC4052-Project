@@ -210,6 +210,22 @@ Explain step by step in a simple way.
     # -------------------------
     return jsonify({"answer": answer})
 
+# =========================
+# VIEW STRUGGLES ENDPOINT
+# =========================
+@app.route("/view_struggles", methods=["GET"])
+def view_struggles():
+    student_id = request.args.get("student_id")
+
+    if not student_id:
+        return jsonify({"error": "Missing student_id"}), 400
+
+    student_data = load_student_data(student_id)
+
+    return jsonify({
+        "student_id": student_id,
+        "struggles": student_data["struggles"]
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)
