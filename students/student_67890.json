@@ -2,7 +2,10 @@
     "student_id": "67890",
     "struggles": {
         "lec1_tut1": [
-            "tut1 q2: when counting nodes, why can’t we use indexing like arrays to get the size faster?"
+            {
+                "type": "tut",
+                "content": "Q2: When counting nodes, why can’t we use indexing like arrays to get the size faster?"
+            }
         ],
         "lec2_tut2": [],
         "lec3_tut3": []

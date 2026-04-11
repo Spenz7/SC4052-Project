@@ -267,54 +267,68 @@ def cohort_analytics():
     # BUILD PROMPT
     # ------------------------
     prompt = f"""
-You are an educational analytics system.
+        You are an educational analytics system.
 
-Analyze student struggles and identify learning patterns.
+        Analyze student struggles and identify learning patterns.
 
-LECTURE CONTENT:
-{lec_content}
+        LECTURE CONTENT:
+        {lec_content}
 
-TUTORIAL CONTENT:
-{tut_content}
+        TUTORIAL CONTENT:
+        {tut_content}
 
-STUDENT STRUGGLES:
-{chr(10).join(all_struggles)}
+        STUDENT STRUGGLES:
+        {chr(10).join(all_struggles)}
 
-TASK:
-Analyze student struggles for a lecture/tutorial pair and produce a concise cohort-level summary.
+        TASK:
+        Analyze student struggles for a lecture/tutorial pair and produce a concise cohort-level summary.
 
-You must:
-1. Identify the main conceptual difficulties students are struggling with.
-2. Identify and rank tutorial questions that students struggle with most, based only on strong evidence from student struggles.
-3. Focus only on significant and repeated issues. Ignore isolated or weak signals.
+        You must:
 
-IMPORTANT DESIGN NOTE:
-- Tutorial question IDs (Q1, Q2, etc.) are not stored or tracked in the system.
-- There is no ground-truth mapping between student struggles and tutorial questions.
-- Any mapping is inferred dynamically using tutorial content and semantic similarity.
-- Student references to question numbers are weak contextual signals only.
+        Each student struggle must be assigned to exactly ONE tutorial question.
+        Do not duplicate assignments across questions.
+        Map each student struggle cluster to the single best matching tutorial question (Q1, Q2, etc.) using semantic similarity.
+        For each tutorial question, compute:
+        MATCH_COUNT = number of student struggles assigned to it
+        Rank tutorial questions using ONLY MATCH_COUNT:
+        Higher MATCH_COUNT = higher rank
+        No other factor is allowed to affect ranking
+        If two questions have the same MATCH_COUNT, break ties using:
+        stronger and more consistent semantic alignment (only as a tie-breaker, never for primary ranking)
 
-IMPORTANT OUTPUT CONSTRAINTS:
-- Do NOT use Markdown.
-- Do NOT use symbols like ###, **, *, or -.
-- Do NOT include indices, list positions, or ordering of student struggle entries.
-- Only use tutorial question IDs (Q1, Q2, etc.) when referring to tutorial questions.
-- Do NOT infer weak relationships to include extra tutorial questions.
-- Only include tutorial questions that have at least one strong semantic match with student struggles.
-- If a tutorial question has no strong evidence of student difficulty, it MUST be excluded.
+        IMPORTANT RULE:
 
-OUTPUT FORMAT (STRICT):
+        You must compute MATCH_COUNT based only on the final assigned grouping of struggles. Each struggle counts once only.
+        You MUST NOT reorder questions based on explanation quality or clarity.
 
-1. Main Student Struggles:
-- Ranked list of key conceptual difficulties (most common to least common)
+        IMPORTANT DESIGN NOTE:
 
-2. Tutorial Questions with Highest Difficulty:
-- Ranked list of tutorial questions (most to least struggled)
-- Each item must include:
-  - Tutorial question ID (Q1, Q2, etc.)
-  - Short description of the associated struggle pattern
-- Only include questions with strong evidence of student struggle
-"""
+        Tutorial question IDs (Q1, Q2, etc.) are not stored or tracked in the system.
+        There is no ground-truth mapping between student struggles and tutorial questions.
+        Any mapping is inferred dynamically using tutorial content and semantic similarity.
+        Student references to question numbers are weak contextual signals only.
+
+        IMPORTANT OUTPUT CONSTRAINTS:
+
+        Do NOT use Markdown.
+        Do NOT use symbols like ###, **, *, or -.
+        Do NOT include indices, list positions, or ordering of student struggle entries.
+        Only use tutorial question IDs (Q1, Q2, etc.) when referring to tutorial questions.
+        Do NOT infer weak relationships to include extra tutorial questions.
+        Only include tutorial questions that have at least one strong semantic match with student struggles.
+        If a tutorial question has no strong evidence of student difficulty, it MUST be excluded.
+
+        OUTPUT FORMAT (STRICT):
+
+        Main Student Struggles:
+        Ranked list of key conceptual difficulties (most common to least common, based on number of student mentions per concept cluster)
+        Tutorial Questions with Highest Difficulty:
+        Ranked list of tutorial questions (most to least struggled, based strictly on counted matches after clustering)
+        Each item must include:
+        Tutorial question ID (Q1, Q2, etc.)
+        Short description of the associated struggle pattern
+        Only include questions with strong evidence of student struggle
+    """
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
