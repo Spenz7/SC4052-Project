@@ -128,6 +128,7 @@ def submit():
     selection = data["selection"]        # "lec1", "tut1", etc.
     question = data["question"]
 
+
     # -------------------------
     # RESOLVE PAIR (FIXED)
     # -------------------------
@@ -225,6 +226,112 @@ def view_struggles():
     return jsonify({
         "student_id": student_id,
         "struggles": student_data["struggles"]
+    })
+
+@app.route("/cohort_analytics", methods=["GET"])
+def cohort_analytics():
+    pair = request.args.get("pair")  # e.g. lec1_tut1
+
+    if pair not in PAIRING:
+        return jsonify({"error": "Invalid pair"}), 400
+
+    # ------------------------
+    # LOAD COURSE MATERIALS
+    # ------------------------
+    lec_content = load_file(PAIRING[pair]["lecture"])
+    tut_content = load_file(PAIRING[pair]["tutorial"])
+
+    # ------------------------
+    # LOAD ALL STUDENT STRUGGLES
+    # ------------------------
+    all_struggles = []
+
+    for file in os.listdir(STUDENT_FOLDER):
+        if file.endswith(".json"):
+            with open(os.path.join(STUDENT_FOLDER, file), "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+                struggles = data.get("struggles", {}).get(pair, [])
+                for s in struggles:
+                    if isinstance(s, dict):
+                        content = s.get("content", "")
+                        if content.strip():
+                            all_struggles.append(content)
+    if not all_struggles:
+        return jsonify({
+            "pair": pair,
+            "analysis": "No student data available for this lecture/tutorial pair yet."
+        }), 200
+    
+    # ------------------------
+    # BUILD PROMPT
+    # ------------------------
+    prompt = f"""
+You are an educational analytics system.
+
+Analyze student struggles and identify learning patterns.
+
+LECTURE CONTENT:
+{lec_content}
+
+TUTORIAL CONTENT:
+{tut_content}
+
+STUDENT STRUGGLES:
+{chr(10).join(all_struggles)}
+
+TASK:
+Analyze student struggles for a lecture/tutorial pair and produce a concise cohort-level summary.
+
+You must:
+1. Identify the main conceptual difficulties students are struggling with.
+2. Identify and rank tutorial questions that students struggle with most, based only on strong evidence from student struggles.
+3. Focus only on significant and repeated issues. Ignore isolated or weak signals.
+
+IMPORTANT DESIGN NOTE:
+- Tutorial question IDs (Q1, Q2, etc.) are not stored or tracked in the system.
+- There is no ground-truth mapping between student struggles and tutorial questions.
+- Any mapping is inferred dynamically using tutorial content and semantic similarity.
+- Student references to question numbers are weak contextual signals only.
+
+IMPORTANT OUTPUT CONSTRAINTS:
+- Do NOT use Markdown.
+- Do NOT use symbols like ###, **, *, or -.
+- Do NOT include indices, list positions, or ordering of student struggle entries.
+- Only use tutorial question IDs (Q1, Q2, etc.) when referring to tutorial questions.
+- Do NOT infer weak relationships to include extra tutorial questions.
+- Only include tutorial questions that have at least one strong semantic match with student struggles.
+- If a tutorial question has no strong evidence of student difficulty, it MUST be excluded.
+
+OUTPUT FORMAT (STRICT):
+
+1. Main Student Struggles:
+- Ranked list of key conceptual difficulties (most common to least common)
+
+2. Tutorial Questions with Highest Difficulty:
+- Ranked list of tutorial questions (most to least struggled)
+- Each item must include:
+  - Tutorial question ID (Q1, Q2, etc.)
+  - Short description of the associated struggle pattern
+- Only include questions with strong evidence of student struggle
+"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are a teaching analytics assistant."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    result = response.choices[0].message.content
+    result = clean_output(result)
+
+    result = re.sub(r"#{2,6}\s*", "", result)
+
+    return jsonify({
+        "pair": pair,
+        "analysis": result
     })
 
 if __name__ == '__main__':

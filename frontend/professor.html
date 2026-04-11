@@ -1,10 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Professor Page</title>
+    <title>Professor Page</title>
 </head>
 <body>
+
 <h1>Professor Interface</h1>
-<!-- Query and results here -->
+
+<!-- Pair Selection -->
+<label>Select Lecture/Tutorial Pair:</label>
+<select id="pair">
+    <option value="lec1_tut1">LEC1 + TUT1</option>
+    <option value="lec2_tut2">LEC2 + TUT2</option>
+    <option value="lec3_tut3">LEC3 + TUT3</option>
+</select>
+
+<br><br>
+
+<!-- Button -->
+<button onclick="generateAnalytics()">Generate Cohort Analytics</button>
+
+<br><br>
+
+<!-- Status -->
+<h4 id="status">Status: Idle</h4>
+
+<!-- Output -->
+<h3>Analysis Result:</h3>
+<div id="output"></div>
+
+<script>
+async function generateAnalytics() {
+    const pair = document.getElementById("pair").value;
+
+    document.getElementById("status").innerText =
+        "Status: Generating cohort analytics...";
+
+    document.getElementById("output").innerText = "";
+
+    try {
+        const res = await fetch(`/cohort_analytics?pair=${pair}`);
+        const data = await res.json();
+
+        document.getElementById("status").innerText =
+            "Status: Done";
+
+        document.getElementById("output").innerHTML =
+            data.analysis.replace(/\n/g, "<br>");
+
+    } catch (err) {
+        document.getElementById("status").innerText =
+            "Status: Error generating analytics";
+    }
+}
+</script>
+
 </body>
 </html>

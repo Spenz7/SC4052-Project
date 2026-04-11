@@ -103,6 +103,11 @@ async function submitQuestion() {
     const selection = document.getElementById("selection").value;
     const question = document.getElementById("question").value;
 
+    if (!question.trim()) {
+        alert("Please input a question before asking");
+        return;
+    }
+    
     document.getElementById("status").innerText =
         "Status: Sending prompt to server...";
 
