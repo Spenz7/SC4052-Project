@@ -7,6 +7,15 @@
 
 <h1>Student Interface</h1>
 
+<!-- Student Selection -->
+<label>Select Student:</label>
+<select id="student_id">
+    <option value="student1">Student 1</option>
+    <option value="student2">Student 2</option>
+</select>
+
+<br><br>
+
 <!-- Lecture/Tutorial Selection -->
 <label>Select Lecture/Tutorial:</label>
 <select id="pair">
@@ -25,7 +34,9 @@
 <!-- Submit Button -->
 <button onclick="submitQuestion()">Ask</button>
 
-<br><br>
+
+<!-- Status -->
+<h4 id="status">Status: Idle</h4>
 
 <!-- Output -->
 <h3>Response:</h3>
@@ -33,23 +44,43 @@
 
 <script>
 async function submitQuestion() {
+    const student_id = document.getElementById("student_id").value;
     const pair = document.getElementById("pair").value;
     const question = document.getElementById("question").value;
 
-    const res = await fetch("/submit", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            student_id: "12345",
-            pair: pair,
-            question: question
-        })
-    });
+    document.getElementById("status").innerText =
+        "Status: Sending prompt to server...";
 
-    const data = await res.json();
-    document.getElementById("response").innerText = data.answer;
+    document.getElementById("response").innerText = "";
+
+    try {
+        const res = await fetch("/submit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                student_id: student_id,
+                pair: pair,
+                question: question
+            })
+        });
+
+        document.getElementById("status").innerText =
+            "Status: Generating response...";
+
+        const data = await res.json();
+
+        document.getElementById("status").innerText =
+            "Status: Done";
+
+        document.getElementById("response").innerText =
+            data.answer;
+
+    } catch (err) {
+        document.getElementById("status").innerText =
+            "Status: Error";
+    }
 }
 </script>
 

@@ -91,6 +91,10 @@ def submit():
 
     Explain step by step in a simple way.
     """
+    
+    print("\n========== PROMPT SENT TO GPT ==========\n")
+    print(prompt)
+    print("\n=======================================\n")
 
     # LLM call
     response = client.chat.completions.create(
