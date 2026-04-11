@@ -36,11 +36,12 @@
 
 <br><br>
 
-<!-- Submit Button -->
+<!-- Buttons -->
 <button onclick="submitQuestion()">Ask</button>
+<button id="responseBtn" onclick="toggleResponse()">Hide Response</button>
 
 <br>
-<button onclick="viewStruggles()">View My Struggles</button>
+<button id="toggleBtn" onclick="toggleStruggles()">View My Struggles</button>
 
 <br>
 
@@ -49,7 +50,9 @@
 
 <!-- Output -->
 <h3>Response:</h3>
-<div id="response"></div>
+<div id="responseContainer">
+    <div id="response"></div>
+</div>
 
 <h3>My Struggles:</h3>
 <div id="struggles"></div>
@@ -59,6 +62,23 @@ const data = {
     lec: ["lec1", "lec2", "lec3"],
     tut: ["tut1", "tut2", "tut3"]
 };
+
+let responseVisible = true;
+
+function toggleResponse() {
+    const container = document.getElementById("responseContainer");
+    const btn = document.getElementById("responseBtn");
+
+    responseVisible = !responseVisible;
+
+    if (responseVisible) {
+        container.style.display = "block";
+        btn.innerText = "Hide Response";
+    } else {
+        container.style.display = "none";
+        btn.innerText = "View Response";
+    }
+}
 
 function updateSelection() {
     const type = document.getElementById("type").value;
@@ -119,6 +139,20 @@ async function submitQuestion() {
     }
 }
 
+let strugglesVisible = false;
+
+function toggleStruggles() {
+    if (strugglesVisible) {
+        document.getElementById("struggles").innerHTML = "";
+        document.getElementById("toggleBtn").innerText = "View My Struggles";
+        strugglesVisible = false;
+    } else {
+        viewStruggles();
+        document.getElementById("toggleBtn").innerText = "Hide My Struggles";
+        strugglesVisible = true;
+    }
+}
+
 async function viewStruggles() {
     const student_id = document.getElementById("student_id").value;
 
@@ -135,13 +169,11 @@ async function viewStruggles() {
             "Status: Loaded struggles";
 
         const container = document.getElementById("struggles");
-
         const struggles = data.struggles;
 
         for (const pair in struggles) {
             const section = document.createElement("div");
 
-            // Title
             const title = document.createElement("h4");
             title.innerText = pair.replace("_", " + ").toUpperCase();
             section.appendChild(title);
@@ -151,21 +183,41 @@ async function viewStruggles() {
                 empty.innerText = "No struggles recorded.";
                 section.appendChild(empty);
             } else {
-                const ul = document.createElement("ul");
-
-                // Sort: lec first, then tut
                 const sorted = struggles[pair].slice().sort((a, b) => {
                     if (a.type === b.type) return 0;
                     return a.type === "lec" ? -1 : 1;
                 });
 
-                sorted.forEach(item => {
-                    const li = document.createElement("li");
-                    li.innerText = `[${item.type.toUpperCase()}] ${item.content}`;
-                    ul.appendChild(li);
-                });
+                const lecItems = sorted.filter(item => item.type === "lec");
+                const tutItems = sorted.filter(item => item.type === "tut");
 
-                section.appendChild(ul);
+                if (lecItems.length > 0) {
+                    const lecHeader = document.createElement("p");
+                    lecHeader.innerText = "Lecture:";
+                    section.appendChild(lecHeader);
+
+                    const lecUl = document.createElement("ul");
+                    lecItems.forEach(item => {
+                        const li = document.createElement("li");
+                        li.innerText = item.content;
+                        lecUl.appendChild(li);
+                    });
+                    section.appendChild(lecUl);
+                }
+
+                if (tutItems.length > 0) {
+                    const tutHeader = document.createElement("p");
+                    tutHeader.innerText = "Tutorial:";
+                    section.appendChild(tutHeader);
+
+                    const tutUl = document.createElement("ul");
+                    tutItems.forEach(item => {
+                        const li = document.createElement("li");
+                        li.innerText = item.content;
+                        tutUl.appendChild(li);
+                    });
+                    section.appendChild(tutUl);
+                }
             }
 
             container.appendChild(section);
