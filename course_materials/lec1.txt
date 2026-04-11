@@ -1,1 +1,149 @@
-# Placeholder content for lec1
+Linked Lists (Python Notes)
+
+1. What is a Linked List
+A linked list is a linear data structure made of nodes.
+Each node contains:
+data (value)
+next (reference to next node)
+Unlike arrays:
+nodes are not stored contiguously in memory
+elements are connected via pointers
+
+2. Types of Linked Lists
+Singly linked list -> moves in one direction (head -> end)
+Doubly linked list -> moves both directions
+Circular linked list -> last node points back to head
+
+3. Why use Linked Lists
+Advantages:
+dynamic size (no fixed capacity)
+efficient insertion/deletion at head
+no need for contiguous memory
+Disadvantages:
+slow random access (must traverse)
+extra memory for pointers
+
+4. Node Structure
+class Node:
+   def __init__(self, data):
+       self.data = data
+       self.next = None
+
+5. Basic Linked List Structure
+class LinkedList:
+   def __init__(self):
+       self.head = None
+       self.size = 0
+
+6. Core Operations
+
+a) Insert at front
+def insert_at_front(self, data):
+   new_node = Node(data)
+   new_node.next = self.head
+   self.head = new_node
+   self.size += 1
+
+b) Insert at back
+def insert_at_back(self, data):
+   new_node = Node(data)
+
+   if not self.head:
+       self.head = new_node
+       self.size += 1
+       return
+
+   cur = self.head
+   while cur.next:
+       cur = cur.next
+
+   cur.next = new_node
+   self.size += 1
+
+c) Display list
+def display(self):
+   cur = self.head
+
+   while cur:
+       print(cur.data, end=" -> ")
+       cur = cur.next
+
+   print("None")
+
+d) Find node at index
+def findAt(self, index):
+   cur = self.head
+
+   while cur and index > 0:
+       cur = cur.next
+       index -= 1
+
+   return cur
+
+7. Insert at index (core idea)
+Steps:
+handle empty list
+handle inserting at head
+find previous node
+reconnect pointers
+def insertNode(head, index, item):
+   new_node = Node(item)
+
+   if head is None:
+       return new_node if index == 0 else None
+
+   if index == 0:
+       new_node.next = head
+       return new_node
+
+   prev = findNode(head, index - 1)
+   if not prev:
+       return None
+
+   new_node.next = prev.next
+   prev.next = new_node
+
+   return head
+
+8. Insert with size tracking
+def insertNode2(self, index, item):
+   new_node = Node(item)
+
+   if index == 0:
+       new_node.next = self.head
+       self.head = new_node
+       self.size += 1
+       return True
+
+   prev = self.findAt(index - 1)
+   if prev:
+       new_node.next = prev.next
+       prev.next = new_node
+       self.size += 1
+       return True
+
+   return False
+
+9. Get size
+Method 1: traverse
+def sizeList(head):
+   count = 0
+   cur = head
+
+   while cur:
+       count += 1
+       cur = cur.next
+
+   return count
+Method 2: stored size
+maintain self.size during insert/delete
+
+10. Key Operations Summary
+A linked list ADT typically supports:
+insert (front, back, index)
+delete (not shown but similar pointer logic)
+search (traversal)
+display (traversal)
+size tracking
+
+

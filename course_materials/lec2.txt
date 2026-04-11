@@ -1,1 +1,108 @@
-# Placeholder content for lec2
+Stack + Queue
+1. STACK (LIFO)
+Definition
+A stack is a linear data structure that follows:
+Last In, First Out (LIFO)
+Meaning:
+last element inserted is the first to be removed
+
+Real-world analogy
+stack of plates
+browser back button
+undo feature in apps
+
+Core operations
+Push -> insert element on top
+ Pop -> remove top element
+ Peek/Top -> view top element
+ isEmpty -> check if stack is empty
+
+Stack behavior
+Top -> [3, 2, 1]
+push(4) -> [4, 3, 2, 1]
+pop() -> removes 4
+
+Python implementation (list-based)
+stack = []
+
+stack.append(10)   # push
+stack.append(20)
+
+stack.pop()        # pop
+stack[-1]          # peek
+len(stack) == 0    # isEmpty
+
+Complexity
+Push -> O(1)
+Pop -> O(1)
+Peek -> O(1)
+
+Common mistakes
+popping from empty stack (error)
+confusing push/pop order
+
+2. QUEUE (FIFO)
+Definition
+A queue is a linear data structure that follows:
+First In, First Out (FIFO)
+Meaning:
+first element inserted is the first to be removed
+
+Real-world analogy
+waiting line at cashier
+printer queue
+task scheduling
+
+Core operations
+Enqueue -> insert at rear
+ Dequeue -> remove from front
+ Front/Peek -> view front element
+ isEmpty -> check if empty
+
+Queue behavior
+Front -> [1, 2, 3] <- Rear
+enqueue(4) -> [1, 2, 3, 4]
+dequeue() -> removes 1
+
+Python implementation (recommended)
+from collections import deque
+
+queue = deque()
+
+queue.append(10)      # enqueue
+queue.append(20)
+
+queue.popleft()       # dequeue
+queue[0]              # front
+len(queue) == 0       # isEmpty
+
+Why NOT use list for queue?
+list.pop(0) -> O(n) (slow)
+deque.popleft() -> O(1) (efficient)
+
+Complexity
+Enqueue -> O(1)
+Dequeue -> O(1) (with deque)
+
+3. STACK vs QUEUE (Key Difference)
+Stack
+LIFO
+insertion + deletion at same end (top)
+Queue
+FIFO
+insert at rear, delete from front
+
+4. When to use what
+Stack use cases:
+undo/redo
+recursion call stack
+expression evaluation
+Queue use cases:
+scheduling tasks
+BFS traversal
+buffering systems
+
+5. One-line summary
+Stack -> last in, first out
+ Queue -> first in, first out
+

@@ -1,10 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Student Page</title>
+    <title>Student Page</title>
 </head>
 <body>
+
 <h1>Student Interface</h1>
-<!-- Query and results here -->
+
+<!-- Lecture/Tutorial Selection -->
+<label>Select Lecture/Tutorial:</label>
+<select id="pair">
+    <option value="lec1_tut1">Lec1 / Tut1</option>
+    <option value="lec2_tut2">Lec2 / Tut2</option>
+    <option value="lec3_tut3">Lec3 / Tut3</option>
+</select>
+
+<br><br>
+
+<!-- Question Input -->
+<textarea id="question" rows="4" cols="50" placeholder="Ask your question here..."></textarea>
+
+<br><br>
+
+<!-- Submit Button -->
+<button onclick="submitQuestion()">Ask</button>
+
+<br><br>
+
+<!-- Output -->
+<h3>Response:</h3>
+<div id="response"></div>
+
+<script>
+async function submitQuestion() {
+    const pair = document.getElementById("pair").value;
+    const question = document.getElementById("question").value;
+
+    const res = await fetch("/submit", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            student_id: "12345",
+            pair: pair,
+            question: question
+        })
+    });
+
+    const data = await res.json();
+    document.getElementById("response").innerText = data.answer;
+}
+</script>
+
 </body>
 </html>

@@ -1,1 +1,54 @@
-# Placeholder content for tut1
+Linked List Practice Questions
+
+1. Easy -> Display Linked List
+Write a function:
+display(head)
+that prints all elements in the linked list in this format:
+1 -> 2 -> 3 -> None
+Requirements:
+Use iteration only
+Handle empty list (print None)
+
+2. Medium -> Count Nodes
+Write a function:
+sizeList(head)
+that returns the number of nodes in the linked list.
+Requirements:
+Must traverse the list
+Do not use extra data structures or stored size
+
+3. Medium -> Insert at Front
+Write:
+insert_at_front(head, data)
+Return:
+new head of linked list
+Requirements:
+Create a new node
+Correctly update pointers
+Handle empty list case
+
+4. Medium -> Insert at Index
+Write:
+insert_at_index(head, index, data)
+Rules:
+Insert node at given index
+If index = 0 -> insert at front
+If index is out of bounds -> return original head unchanged
+Requirements:
+Must traverse the list
+Must correctly relink pointers
+
+5. Difficult -> Reverse Linked List
+Write:
+reverse(head)
+Return:
+new head of reversed linked list
+Constraints:
+Must be iterative (no recursion)
+Must only use pointer manipulation (no extra list)
+Hint:
+You will need 3 pointers:
+prev
+current
+next 
+

@@ -1,1 +1,62 @@
-# Placeholder content for tut2
+Stack + Queue Tutorial Questions
+
+1. Easy -> Stack Basic Operations
+Implement a stack using a Python list and perform the following operations:
+push elements 1, 2, 3
+pop one element
+print the top element
+check if stack is empty
+Requirements:
+Use only built-in list operations
+Do not use external libraries
+Expected focus:
+Understanding push/pop/peek behavior
+
+2. Medium -> Balanced Stack Simulation
+Given a sequence of operations:
+push(5), push(10), pop(), push(20), pop()
+Write a function that simulates these operations and returns the final stack state.
+Requirements:
+Use a list as stack
+Handle empty pop safely (ignore or return message)
+Expected output example:
+Final stack: [5]
+
+3. Medium -> Queue Basic Operations (Using deque)
+Implement a queue using collections.deque and perform:
+enqueue 1, 2, 3
+dequeue one element
+print front element
+check size
+Requirements:
+Must use deque (not list)
+Ensure O(1) operations
+
+4. Medium -> Stack Reversal Problem
+Write a function:
+reverse_stack(stack)
+that reverses a stack using ONLY stack operations.
+Rules:
+You cannot use slicing or built-in reverse
+You may use an auxiliary stack
+Example:
+Input:  [1, 2, 3]
+Output: [3, 2, 1]
+
+5. Difficult -> Queue Using Two Stacks
+Implement a queue using two stacks:
+You must support:
+enqueue(x)
+dequeue()
+peek()
+isEmpty()
+Rules:
+Use only stack operations (append, pop)
+No direct use of deque or list pop(0)
+Maintain FIFO behavior using two stacks
+Hint:
+One stack for input
+One stack for output
+Example behavior:
+enqueue(1), enqueue(2), dequeue() -> 1
+

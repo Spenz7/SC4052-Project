@@ -1,1 +1,51 @@
-# Placeholder content for tut3
+BST Tutorial Questions
+
+1. Easy -> Inorder Traversal
+Write a function:
+inorder(root)
+that prints all values of a BST in sorted order.
+Requirements:
+recursive solution
+follow Left -> Root -> Right
+
+2. Medium -> BST Search
+Write:
+search(root, key)
+Return:
+True if key exists
+False otherwise
+Constraints:
+must use BST property (no full traversal)
+
+3. Medium -> Insert into BST
+Write:
+insert(root, data)
+Rules:
+insert into correct position
+maintain BST property
+return updated root
+
+4. Medium -> Find Minimum Value
+Write:
+find_min(root)
+Return:
+smallest value in BST
+Hint:
+always go left until None
+Edge case:
+empty tree -> return None
+
+5. Difficult -> Check if Valid BST
+Write:
+is_bst(root)
+Return:
+True if tree satisfies BST rules
+False otherwise
+Rules:
+every node must respect range constraints
+Hint:
+use recursion with min/max bounds
+Example idea:
+left subtree must be < node
+right subtree must be > node 
+

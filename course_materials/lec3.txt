@@ -1,1 +1,86 @@
-# Placeholder content for lec3
+Binary Search Tree (BST) Notes
+
+1. What is a BST
+A Binary Search Tree is a binary tree where:
+For every node:
+left subtree < node value
+right subtree > node value
+This property must hold for ALL nodes.
+
+2. Structure of a Node
+class Node:
+   def __init__(self, data):
+       self.data = data
+       self.left = None
+       self.right = None
+
+3. Key Properties
+At most 2 children per node
+Left subtree contains smaller values
+Right subtree contains larger values
+No duplicate values (usually assumed in exams)
+
+4. Basic Operations
+
+a) Search
+Idea:
+compare value at each node
+go left or right accordingly
+Time:
+O(h), h = height of tree
+
+b) Insert
+Rules:
+smaller -> go left
+larger -> go right
+insert at empty spot
+
+c) Traversals
+Inorder -> Left, Root, Right (gives sorted order)
+ Preorder -> Root, Left, Right
+ Postorder -> Left, Right, Root
+
+5. Insert into BST
+def insert(root, data):
+   if root is None:
+       return Node(data)
+
+   if data < root.data:
+       root.left = insert(root.left, data)
+   else:
+       root.right = insert(root.right, data)
+
+   return root
+
+6. Search in BST
+def search(root, key):
+   if root is None:
+       return False
+
+   if root.data == key:
+       return True
+
+   if key < root.data:
+       return search(root.left, key)
+   else:
+       return search(root.right, key)
+
+7. Inorder Traversal
+def inorder(root):
+   if root:
+       inorder(root.left)
+       print(root.data)
+       inorder(root.right)
+
+8. Complexity
+Search -> O(h)
+Insert -> O(h)
+Worst case (skewed tree) -> O(n)
+Balanced BST -> O(log n)
+
+9. Key Idea to Remember
+BST = “decisions based on comparison”
+Every step:
+go left if smaller
+go right if larger 
+
