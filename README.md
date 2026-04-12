@@ -15,7 +15,7 @@ A cloud-based learning intelligence system that provides LLM-powered study assis
 
 ```bash
 git clone <your-repo-url>
-cd SC4052-Project
+cd SC4052-Project-main
 ```
 
 ### 2\. Install dependencies
